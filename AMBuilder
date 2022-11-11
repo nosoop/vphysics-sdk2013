@@ -8,6 +8,12 @@ sourceFiles = [
   'extension.cpp',
   'physhandles.cpp',
   'physnatives.cpp',
+  'math_shim.cpp',
+]
+
+sdk_fix_extern_math = [
+  'sdk2013',
+  'bms',
 ]
 
 ###############
@@ -29,5 +35,9 @@ for sdk_name in Extension.sdks:
   sdk = Extension.sdks[sdk_name]
   
   binary = Extension.HL2Config(project, projectName + '.ext.' + sdk.ext, sdk)
+  
+  cxx = binary.compiler
+  if sdk_name in sdk_fix_extern_math and builder.target_platform == 'linux':
+    cxx.defines += [ 'MATH_LIB_FIX' ]
 
 Extension.extensions = builder.Add(project)
